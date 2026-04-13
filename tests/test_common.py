@@ -53,3 +53,15 @@ line one
 line two
 """
     assert vtt_to_plain_text(vtt).splitlines() == ["line one", "line two"]
+
+
+from scripts._common import format_video_dirname
+
+
+def test_format_video_dirname_uses_iso_date_and_id():
+    assert format_video_dirname("20260413", "dQw4w9WgXcQ") == "2026-04-13_dQw4w9WgXcQ"
+
+
+def test_format_video_dirname_falls_back_when_date_missing():
+    assert format_video_dirname(None, "abc123") == "0000-00-00_abc123"
+    assert format_video_dirname("", "abc123") == "0000-00-00_abc123"

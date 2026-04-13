@@ -82,3 +82,15 @@ def vtt_to_plain_text(vtt: str) -> str:
             deduped.append(line)
 
     return "\n".join(deduped)
+
+
+def format_video_dirname(upload_date: str | None, video_id: str) -> str:
+    """Build `<YYYY-MM-DD>_<video_id>` from YouTube's YYYYMMDD string.
+
+    Missing/invalid dates use `0000-00-00` so the video still gets a stable folder.
+    """
+    if upload_date and len(upload_date) == 8 and upload_date.isdigit():
+        iso = f"{upload_date[0:4]}-{upload_date[4:6]}-{upload_date[6:8]}"
+    else:
+        iso = "0000-00-00"
+    return f"{iso}_{video_id}"
