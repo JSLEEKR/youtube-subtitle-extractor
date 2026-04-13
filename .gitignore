@@ -7,4 +7,5 @@ venv/
 *.mp4
 *.wav
 *.vtt
+!tests/fixtures/*.vtt
 .env
