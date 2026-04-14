@@ -5,7 +5,7 @@ description: Process all recent videos from a YouTube channel — lists videos w
 
 # extract-channel
 
-You run the full channel pipeline: list recent videos, then loop the per-video extract pipeline over them. The per-video pipeline is defined in `.claude/skills/extract-video/SKILL.md` — steps 1–8 of that skill are the "per-video pipeline" referenced below.
+You run the full channel pipeline: list recent videos, then loop the per-video extract pipeline over them. The per-video pipeline is defined in `.claude/skills/extract-video/SKILL.md` — steps 1–9 of that skill are the "per-video pipeline" referenced below.
 
 ## Input
 - A channel URL, `@handle`, or channel ID (required)
@@ -46,7 +46,7 @@ Use TaskCreate to create one task per video, subject = `Process: <title>`. This 
 For each video in the filtered list:
 
 1. Mark its task `in_progress` via TaskUpdate.
-2. Run the **per-video pipeline** (steps 1–8 from `.claude/skills/extract-video/SKILL.md`) using the video's URL.
+2. Run the **per-video pipeline** (steps 1–9 from `.claude/skills/extract-video/SKILL.md`) using the video's URL.
 3. On success: mark the task `completed`.
 4. On failure: mark the task `completed` anyway (the failure is already recorded in that video's `meta.json` under `error`), but track it in a local "failed" counter for the final report.
 5. Continue to the next video even if this one failed.

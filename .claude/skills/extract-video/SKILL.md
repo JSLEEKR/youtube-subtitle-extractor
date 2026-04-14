@@ -45,9 +45,17 @@ Otherwise write:
 }
 ```
 
-## Step 3 — Get the English transcript
+## Step 3 — Download the source video
 
-If `transcript_en.txt` already exists in the directory, skip to Step 4.
+If `video.mp4` already exists in the directory, skip. Otherwise run:
+```bash
+python -m scripts.fetch_video <video_url> --out-dir <video_dir>
+```
+On success the script writes `video.mp4`. On failure, record the error in `meta.json` under `error` and continue — video download is not a hard dependency for the rest of the pipeline, since subtitles/transcription run from their own download path.
+
+## Step 4 — Get the English transcript
+
+If `transcript_en.txt` already exists in the directory, skip to Step 5.
 
 Otherwise try official subs first:
 ```bash
@@ -59,9 +67,9 @@ python -m scripts.fetch_subs <video_url> --out-dir <video_dir>
   python -m scripts.transcribe <video_url> --out-dir <video_dir>
   ```
   On success, update `subtitle_source` to `"whisper"` plus the model/device reported by the script.
-- Any other non-zero exit → record the error in `meta.json` under `error` and stop processing this video (do not proceed to steps 4–6).
+- Any other non-zero exit → record the error in `meta.json` under `error` and stop processing this video (do not proceed to steps 5–7).
 
-## Step 4 — Korean translation → `transcript_ko.md`
+## Step 5 — Korean translation → `transcript_ko.md`
 
 If `transcript_ko.md` already exists, skip.
 
@@ -77,7 +85,7 @@ Otherwise read `transcript_en.txt` and produce a natural Korean translation in-s
 
 Write the result to `transcript_ko.md`.
 
-## Step 5 — Researched document → `document.md`
+## Step 6 — Researched document → `document.md`
 
 If `document.md` already exists, skip.
 
@@ -107,7 +115,7 @@ While writing, use the `WebSearch` tool to:
 
 Do NOT invent citations. If WebSearch fails or returns nothing credible, omit the citation rather than guess.
 
-## Step 6 — Adversarial debate → `debate.md`
+## Step 7 — Adversarial debate → `debate.md`
 
 If `debate.md` already exists or the user passed `--skip-debate`, skip.
 
@@ -141,7 +149,7 @@ Structure:
 
 Write the result to `debate.md`.
 
-## Step 7 — Update channel README
+## Step 8 — Update channel README
 
 Regenerate `output/<channel_handle>/README.md` so that this video appears in the index.
 
@@ -157,7 +165,7 @@ Read any existing `meta.json` files under `output/<channel_handle>/*/meta.json`,
 
 Write the file. Overwrite any previous README.
 
-## Step 8 — Report
+## Step 9 — Report
 
 Print a short summary for the user:
 - Video title
@@ -167,6 +175,7 @@ Print a short summary for the user:
 
 ## Failure handling
 
-- If Step 3 fails, stop and report. Do not touch steps 4–6.
-- If Steps 4–6 fail (e.g., WebSearch times out), record the error in `meta.json` under `error`, keep any partial files, report what succeeded.
+- If Step 4 fails, stop and report. Do not touch steps 5–7.
+- If Steps 5–7 fail (e.g., WebSearch times out), record the error in `meta.json` under `error`, keep any partial files, report what succeeded.
+- Step 3 (video download) failures are non-fatal: log the error and continue to Step 4.
 - Idempotency: re-running the skill picks up where the previous run stopped.
