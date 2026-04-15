@@ -9,3 +9,6 @@ venv/
 *.vtt
 !tests/fixtures/*.vtt
 .env
+
+# local tooling state
+.drift-guard/

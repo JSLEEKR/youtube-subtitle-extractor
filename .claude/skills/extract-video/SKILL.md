@@ -151,6 +151,8 @@ Write the result to `debate.md`.
 
 ## Step 8 — Update channel README
 
+If the environment variable `SKIP_CHANNEL_README=1` is set, skip this entire step.
+
 Regenerate `output/<channel_handle>/README.md` so that this video appears in the index.
 
 Read any existing `meta.json` files under `output/<channel_handle>/*/meta.json`, sort by `upload_date` descending, and render:
